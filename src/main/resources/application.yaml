@@ -18,11 +18,11 @@ spring:
 
 aliyun:
   oss:
-    access-key-id: LTAI5tE8g9NJCk9ZwahdN18N
-    access-key-secret: GPpLfO9M9DUUmwob53tbhW5FMyUBtc
-    bucket-domain: http://feng101.oss-cn-hangzhou.aliyuncs.com
-    bucket-name: feng101
-    end-point: http://oss-cn-hangzhou.aliyuncs.com
+    access-key-id: your access-key-id
+    access-key-secret: your access-key-secret
+    bucket-domain: your bucket-domain
+    bucket-name: your bucket-name
+    end-point: your end-point
 
 
 mybatis:
