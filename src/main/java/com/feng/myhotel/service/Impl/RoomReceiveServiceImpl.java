@@ -127,7 +127,7 @@ public class RoomReceiveServiceImpl implements RoomReceiveService {
             throw new RuntimeException("数据不能为空");
 
         // 通过房间id拿到订单
-        RoomOrderVO roomOrderVO = roomOrderPOMapper.selectRoomOrderVOById(id);
+        RoomOrderVO roomOrderVO = roomOrderPOMapper.selectRoomOrderVOByRoomId(id);
 
         // 设置房间status为2--未打扫状态
         Integer roomStatus = StatusConstant.ROOM_STATUS_DIRTY;
