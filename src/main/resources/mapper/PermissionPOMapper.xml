@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.PermissionPOMapper">
+    <resultMap id="baseResultMap" type="com.feng.myhotel.entities.po.PermissionPO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="permissionName" column="permission_name" jdbcType="VARCHAR"/>
+        <result property="permissionValue" column="permission_value" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="menuBaseResultMap" type="com.feng.myhotel.entities.vo.MenuVO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="menuName" column="permission_name" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="treeResultMap" type="com.feng.myhotel.entities.vo.PermissionTree">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="permissionName" column="permission_name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectPermissionTree" resultMap="treeResultMap">
+        SELECT id, pid, permission_name
+        FROM t_permission;
+    </select>
+    <select id="selectButtonList" resultType="string">
+        SELECT
+            permission_name
+        FROM
+            t_permission
+        WHERE
+                id IN ( SELECT t_role_permission.permission_id FROM t_role_permission WHERE t_role_permission.role_id = #{roleId} )
+          AND type = 2
+          AND pid = #{permissionId}
+    </select>
+    <select id="selectMenuByRoleId" resultMap="menuBaseResultMap">
+        select id, pid, permission_name, icon, path, create_date
+        from t_permission
+        where id IN (SELECT permission_id
+                     FROM t_role_permission
+                     WHERE t_role_permission.role_id = #{roleId})
+          AND type = 1
+    </select>
+
+    <select id="selectPermissionValueByRoleId" resultType="string">
+        select permission_value
+        from t_permission
+        where id IN (SELECT permission_id
+                     FROM t_role_permission
+                     WHERE t_role_permission.role_id = #{roleId})
+          AND type > 1
+    </select>
+    <select id="selectAllPermission" resultMap="baseResultMap">
+        select * from t_permission
+    </select>
+
+</mapper>

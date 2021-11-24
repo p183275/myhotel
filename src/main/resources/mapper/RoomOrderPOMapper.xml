@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feng.myhotel.mapper.RoomOrderPOMapper" >
+  <resultMap id="BaseResultMap" type="com.feng.myhotel.entities.po.RoomOrderPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR"/>
+    <result column="gender" property="gender" jdbcType="INTEGER"/>
+    <result column="room_type" property="roomType" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="credentials" property="credentials" jdbcType="INTEGER" />
+    <result column="credentials_code" property="credentialsCode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR"/>
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="order_end_date" property="orderEndDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="orderVOBaseResultMap" type="com.feng.myhotel.entities.vo.RoomOrderVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR"/>
+    <result column="gender" property="gender" jdbcType="INTEGER"/>
+    <result column="room_type" property="roomType" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="credentials" property="credentials" jdbcType="INTEGER" />
+    <result column="credentials_code" property="credentialsCode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="order_end_date" property="orderEndDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, order_id, room_id, user_id, user_name, phone_number, gender, room_type, price, credentials, credentials_code,
+    address, content, pay_status, status, begin_date, end_date, create_date, order_end_date
+  </sql>
+  <select id="selectUnPayReserveRoomOrder" resultMap="orderVOBaseResultMap">
+    select *
+    from t_room_order
+    where status = 0
+      And pay_status = #{payStatus}
+  </select>
+  <select id="selectAllReserveRoomOrder" resultMap="orderVOBaseResultMap">
+    select *
+    from t_room_order
+    where status = #{status}
+    And pay_status = 1
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.feng.myhotel.entities.po.RoomOrderPOExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_room_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectRoomOrderVOById" resultMap="orderVOBaseResultMap">
+    select *
+    from t_room_order
+    where id = #{id}
+  </select>
+  <select id="selectRoomOrderVOByRoomId" resultMap="orderVOBaseResultMap">
+    select *
+    from t_room_order
+    where room_id = #{roomId}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllRoomOrder" resultMap="orderVOBaseResultMap">
+    select * from t_room_order
+    ORDER BY `status` ASC
+  </select>
+  <delete id="deleteRoomOrderById">
+    delete from t_room_order
+    where id in (
+    <foreach collection="idList" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_room_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.feng.myhotel.entities.po.RoomOrderPOExample" >
+    delete from t_room_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.feng.myhotel.entities.po.RoomOrderPO" >
+    insert into t_room_order (id, order_id, room_id, 
+      user_id,user_name, phone_number, gender, room_type, price,
+      credentials, credentials_code, address, 
+      content, status, pay_status, begin_date,
+      end_date, create_date, order_end_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT},#{userName,jdbcType=VARCHAR},#{phoneNumber,jdbcType=VARCHAR},#{gender,jdbcType=INTEGER},
+            #{roomType,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+      #{credentials,jdbcType=INTEGER}, #{credentialsCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{payStatus,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP},
+      #{endDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{orderEndDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.feng.myhotel.entities.po.RoomOrderPO" >
+    insert into t_room_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="roomType != null" >
+        room_type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="credentials != null" >
+        credentials,
+      </if>
+      <if test="credentialsCode != null" >
+        credentials_code,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="orderEndDate != null" >
+        order_end_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="roomType != null" >
+        #{roomType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="credentials != null" >
+        #{credentials,jdbcType=INTEGER},
+      </if>
+      <if test="credentialsCode != null" >
+        #{credentialsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderEndDate != null" >
+        #{orderEndDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.feng.myhotel.entities.po.RoomOrderPOExample" resultType="java.lang.Integer" >
+    select count(*) from t_room_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updatePayStatusAndStatus">
+    update t_room_order
+    set pay_status = #{payStatus}, status = #{status}
+    where id = #{roomOrderId}
+  </update>
+  <update id="updateOrderStatusAndDateById">
+    update t_room_order
+    set status = #{orderStatus}, order_end_date = #{date}
+    where id = #{id}
+  </update>
+  <update id="updateRoomIdByOrderId">
+    update t_room_order
+    set room_id = #{roomId}, status = #{status}
+    where id = #{orderId}
+  </update>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_room_order
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomId != null" >
+        room_id = #{record.roomId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.roomType != null" >
+        room_type = #{record.roomType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.credentials != null" >
+        credentials = #{record.credentials,jdbcType=INTEGER},
+      </if>
+      <if test="record.credentialsCode != null" >
+        credentials_code = #{record.credentialsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.beginDate != null" >
+        begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endDate != null" >
+        end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orderEndDate != null" >
+        order_end_date = #{record.orderEndDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_room_order
+    set id = #{record.id,jdbcType=BIGINT},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      room_id = #{record.roomId,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      room_type = #{record.roomType,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      credentials = #{record.credentials,jdbcType=INTEGER},
+      credentials_code = #{record.credentialsCode,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      order_end_date = #{record.orderEndDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.feng.myhotel.entities.po.RoomOrderPO" >
+    update t_room_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roomType != null" >
+        room_type = #{roomType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="credentials != null" >
+        credentials = #{credentials,jdbcType=INTEGER},
+      </if>
+      <if test="credentialsCode != null" >
+        credentials_code = #{credentialsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderEndDate != null" >
+        order_end_date = #{orderEndDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.feng.myhotel.entities.po.RoomOrderPO" >
+    update t_room_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      room_type = #{roomType,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      credentials = #{credentials,jdbcType=INTEGER},
+      credentials_code = #{credentialsCode,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      order_end_date = #{orderEndDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

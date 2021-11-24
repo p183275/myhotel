@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.RoomTypeMapper">
+    <resultMap id="baseResultMap" type="com.feng.myhotel.entities.po.RoomTypePO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectAllType" resultMap="baseResultMap">
+        select * from t_room_type
+    </select>
+    <select id="selectRoomTypeById" resultMap="baseResultMap">
+        select * from t_room_type where id = #{id}
+    </select>
+    <select id="selectTypeNameById" resultType="string">
+        select name from t_room_type where id = #{id}
+    </select>
+    <select id="selectTypeNameByRoomId" resultType="string">
+        SELECT NAME
+        FROM t_room_type
+        WHERE id = (
+                    SELECT type_id
+                    FROM t_room
+                    WHERE id = #{roomId}
+                    )
+    </select>
+
+</mapper>

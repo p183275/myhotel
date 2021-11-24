@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.HotelInformationMapper">
+    <resultMap id="baseResultMap" type="com.feng.myhotel.entities.po.HotelInformationPO">
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="founders" column="founders" jdbcType="VARCHAR"/>
+        <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+        <result property="headerPicture" column="header_picture" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectHotelInformation" resultMap="baseResultMap">
+        select * from t_hotel_information
+    </select>
+    <update id="updateHotelInformation">
+        UPDATE t_hotel_information
+        SET name = #{hotelInformationPO.name}, phone_number = #{hotelInformationPO.phoneNumber},
+            update_date = #{hotelInformationPO.updateTime}, founders = #{hotelInformationPO.founders}
+    </update>
+    <update id="updateHeaderPictureById">
+        update t_user
+        set header_picture = #{headerPicture}
+        where id = 1
+    </update>
+
+</mapper>

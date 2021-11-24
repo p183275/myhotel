@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.DepositMapper">
+
+    <resultMap id="depositAndOrderVObaseResultMap" type="com.feng.myhotel.entities.vo.DepositAndOrderVO">
+        <id property="depositId" column="id" jdbcType="BIGINT"/>
+        <result property="deposit" column="deposit" jdbcType="DECIMAL"/>
+        <collection property="roomOrderVO" ofType="com.feng.myhotel.entities.vo.RoomOrderVO"
+                    column="room_order_id"
+                     select="com.feng.myhotel.mapper.RoomOrderPOMapper.selectRoomOrderVOById"/>
+    </resultMap>
+
+    <insert id="insertCashierPay">
+        insert into t_deposit (deposit, room_order_id, status)
+        values (#{cashierPayPO.deposit,jdbcType=DECIMAL}, #{cashierPayPO.roomOrderId,jdbcType=BIGINT},
+                #{cashierPayPO.status,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectDepositAndOrderVOByStatus" resultMap="depositAndOrderVObaseResultMap">
+        select id, deposit, room_order_id
+        from t_deposit
+        where status = #{status}
+    </select>
+    <update id="updateDepositStatusById">
+        update t_deposit
+        set status = 1
+        where id = #{depositId}
+    </update>
+    <delete id="deleteDepositByOrderIdList">
+        delete from t_deposit
+        where id in (
+        <foreach collection="idList" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

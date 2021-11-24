@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.OrderNumberMapper">
+    <resultMap id="BaseResultMap" type="com.feng.myhotel.entities.vo.OrderNumberVO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roomOrderNumber" column="room_order_number" jdbcType="BIGINT"/>
+        <result property="foodOrderNumber" column="food_order_number" jdbcType="BIGINT"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="getAllOrderNumber" resultMap="BaseResultMap">
+        SELECT
+            id,
+            room_order_number,
+            food_order_number,
+            create_date
+        FROM
+            t_order_number
+        ORDER BY
+            id DESC
+            LIMIT 7;
+    </select>
+    <insert id="insertOrderNumber">
+        insert into t_order_number
+        (room_order_number, food_order_number, create_date)
+        values (#{orderNumberVO.roomOrderNumber,jdbcType=BIGINT}, #{orderNumberVO.foodOrderNumber,jdbcType=BIGINT},
+                #{orderNumberVO.createDate,jdbcType=TIMESTAMP})
+    </insert>
+</mapper>

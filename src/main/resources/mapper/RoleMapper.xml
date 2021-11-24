@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.myhotel.mapper.RoleMapper">
+    <resultMap id="baseResultMap" type="com.feng.myhotel.entities.po.RolePO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="roleVOBaseResultMap" type="com.feng.myhotel.entities.vo.RoleVO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <collection property="ownAuthIdList" ofType="list" column="id"
+                    select="com.feng.myhotel.mapper.RoleMapper.selectAuthIdListByRoleId"/>
+    </resultMap>
+    <insert id="insertRole">
+        INSERT INTO t_role
+        (role_name, remark, create_date)
+        values (#{rolePO.roleName,jdbcType=VARCHAR}, #{rolePO.remark,jdbcType=VARCHAR}, #{rolePO.createDate,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertRelationByRoleId">
+        INSERT INTO t_role_permission
+        (role_id, permission_id)
+        VALUES
+        <foreach collection="permissionIdList" item="permissionId" separator=",">
+            (#{roleId}, #{permissionId})
+        </foreach>
+    </insert>
+    <select id="getRoleNameByRoleId" resultType="string">
+        select role_name from t_role where id = #{roleId}
+    </select>
+    <select id="selectAuthIdListByRoleId" resultType="integer">
+        SELECT permission_id
+        FROM t_role_permission
+        WHERE role_id = #{id}
+    </select>
+    <select id="selectAllRoleVO" resultMap="roleVOBaseResultMap">
+        select *
+        from t_role
+    </select>
+    <select id="selectAllRolePOById" resultMap="baseResultMap">
+        select * from t_role where id = #{roleId}
+    </select>
+    <delete id="deleteRoleByIdList">
+        DELETE FROM t_role
+        WHERE id IN (
+        <foreach collection="roleIdList" item="roleId" separator=",">
+            #{roleId}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteAllPermissionsByRoleId">
+        DELETE FROM t_role_permission
+        WHERE role_id = #{roleId}
+    </delete>
+    <delete id="deleteAllPermissionsByRoleIdList">
+        DELETE FROM t_role_permission
+        WHERE role_id IN (
+        <foreach collection="roleIdList" item="roleId" separator=",">
+            #{roleId}
+        </foreach>
+        )
+    </delete>
+
+</mapper>
