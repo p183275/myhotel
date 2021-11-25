@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 //.build();
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
-                .enable(true)
+                .enable(false)
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.any())
