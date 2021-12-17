@@ -12,7 +12,7 @@ import java.util.Map;
 public class ShortMessageUtils {
 
     public static void main(String[] args) {
-        sendShortMessage("1234", "15570452082");
+        sendShortMessage("1234", "电话号码");
         System.out.println("短信已发送");
     }
 
